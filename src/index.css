@@ -1,0 +1,36 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  font-family: 'Roboto', sans-serif;
+  background-color: #ebebeb;
+  color: black;
+}
+
+html{
+  overflow-x: hidden;
+}
+
+a{
+  text-decoration: none;
+  color: var(--white);
+}
+
+img{
+  max-height: 100%;
+}
+
+ul{
+  list-style: none;
+}
+
+h1, h2, h3, h4{
+  text-wrap: balance;
+}
+
+p{
+  text-wrap: pretty;
+}
