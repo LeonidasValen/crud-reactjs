@@ -36,7 +36,11 @@ export function Created({employees, setEmployees,setIsAdding}){
         }
 
         // actualizar datos del empleado
-        const newEmployee = {...formData};
+    // asigna un id único al nuevo empleado
+    const newEmployee = {
+        id: employees.length + 1, // O utiliza una biblioteca para generar identificadores únicos
+        ...formData
+    };
 
         setIsAdding(false);//cierra el modal
         setEmployees([...employees, newEmployee]);//actualiza el arrays del employees

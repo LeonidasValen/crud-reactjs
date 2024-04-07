@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 import { Created } from "../modificated/create";
-import { Pagination } from "./pagination";
+import { Pagination } from "../navigation/pagination";
 import { Header } from "./header";
 import { Table } from "../table/table";
 import { Edit } from "../modificated/update";
@@ -14,9 +14,6 @@ import { employeesData } from "../../data/data";
 
 export function Dasboard({ setIsAuthenticated }){
 
-    //estado del modal agregar nuevo empleado
-    const [isAdding, setIsAdding] = useState(false);
-
     //estado y funcion que cuando carga la pagina se ejecuta 
     const [employees, setEmployees] = useState(() => {
         //guarda los datos
@@ -25,6 +22,9 @@ export function Dasboard({ setIsAuthenticated }){
         return data || employeesData;
     });
     
+    //estado del modal agregar nuevo empleado
+    const [isAdding, setIsAdding] = useState(false);
+
     const [isEditing, setIsEditing] = useState(false);
     //guarda los datos del empleado para luego su edicion
     const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -35,11 +35,12 @@ export function Dasboard({ setIsAuthenticated }){
         const [employee] = employees.filter(employee => employee.id === id)
 
         setSelectedEmployee(employee);
-        setIsEditing(true)
+        setIsEditing(true)//muestra el modal
     }
 
     //funcion para borrar el empleado
     const handleDelete = id => {
+        let deletedEmployee;
         //mensaje de advertencia
         Swal.fire({
             icon: 'warning',
@@ -55,18 +56,17 @@ export function Dasboard({ setIsAuthenticated }){
                 //si es diferente a -1 hara la eliminacion
                 if (indexToDelete !== -1) {
                     //obtiene los datos del empleado seleccionado
-                    const deletedEmployee = employees[indexToDelete];
+                    deletedEmployee = employees[indexToDelete]; 
                     // filtra y elimina al empleado de la lista
-                    const filteredEmployees = employees.filter(employee => employee.id !== id);
-    
-                    // actualizar el id de los empleados que estan despues de eliminar un empleado
-                    for (let i = indexToDelete; i < filteredEmployees.length; i++) {
-                        filteredEmployees[i].id = i + 1;
-                    }
+                    const updatedEmployees = employees.filter(employee => employee.id !== id);
+                    const updatedEmployeesWithUniqueIds = updatedEmployees.map((employee, index) => ({
+                        ...employee,
+                        id: index + 1
+                    }));
     
                     // actualiza el estado de los empleados y los datos en el almacenamiento local
-                    setEmployees(filteredEmployees);
-                    localStorage.setItem('employees_data', JSON.stringify(filteredEmployees));
+                    setEmployees(updatedEmployeesWithUniqueIds);
+                    localStorage.setItem('employees_data', JSON.stringify(updatedEmployeesWithUniqueIds));
     
                     // mensaje de exito
                     Swal.fire({
@@ -80,16 +80,32 @@ export function Dasboard({ setIsAuthenticated }){
             }
         });
     }
-    
 
-        //Paginacion
+    //Search
+    const [search, setSearch] = useState('');
+    // console.log(search)
+    const [filteredEmployees, setFilteredEmployes] = useState([])//filtra los empleados
+
+    //buscador del empleado
+    useEffect(()=>{
+        const filtered = employees.filter((employee)=>
+        employee.firstName.toLowerCase().includes(search.toLocaleLowerCase())
+    );
+    setFilteredEmployes(filtered)
+    },[search, employees])
+
+    //Paginacion
     const itemsPerPage = 10;//cantidad de items a mostrar
     const [currentPage, setCurrentPage] = useState(1);
-    const totalPages = Math.ceil(employees.length / itemsPerPage);//calcula de total de paginas que va haber
+    const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);//calcula de total de paginas que va haber
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const currentItems = employees.slice(startIndex, endIndex);//cantidad de empleados a mostras que son 10
-        // console.log(currentItems)
+    const currentItems = filteredEmployees.slice(startIndex, endIndex);//cantidad de empleados a mostras que son 10
+    // console.log(currentItems)
+
+    useEffect(()=>{
+        setCurrentPage(1)
+    }, [search])
 
     const handlePageChange = (newPage) => {
         setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
@@ -100,8 +116,8 @@ export function Dasboard({ setIsAuthenticated }){
             <h1 className="titulo">Employers table</h1>
 
             <section className="table-employee">
-                <Header setIsAuthenticated={setIsAuthenticated} setIsAdding={setIsAdding}/>
-                <Table employees={currentItems} handleEdit={handleEdit}  handleDelete={handleDelete} />
+                <Header setIsAuthenticated={setIsAuthenticated} setIsAdding={setIsAdding} setSearch={setSearch}/>
+                <Table employees={currentItems} handleEdit={handleEdit} handleDelete={handleDelete} />
                 <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
             </section>
 

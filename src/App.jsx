@@ -14,7 +14,7 @@ function App() {
     }
   },[])
 
-  console.log(isAuthenticated)
+  // console.log(isAuthenticated)
   return (
     <>
     {isAuthenticated ?(
