@@ -1,16 +1,19 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 
+import { Created } from "../modificated/create";
+import { Pagination } from "./pagination";
 import { Header } from "./header";
-import { Table } from "./table";
+import { Table } from "../table/table";
 import { Edit } from "../modificated/update";
 
 import './dasboard.css'
 
 import { employeesData } from "../../data/data";
-import { Created } from "../modificated/create";
+
 
 export function Dasboard({ setIsAuthenticated }){
+
     //estado del modal agregar nuevo empleado
     const [isAdding, setIsAdding] = useState(false);
 
@@ -36,7 +39,8 @@ export function Dasboard({ setIsAuthenticated }){
     }
 
     //funcion para borrar el empleado
-    const handleDelete = id =>{
+    const handleDelete = id => {
+        //mensaje de advertencia
         Swal.fire({
             icon: 'warning',
             title: 'Are you sure?',
@@ -44,31 +48,62 @@ export function Dasboard({ setIsAuthenticated }){
             showCancelButton: true,
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
-        }).then(result =>{
-            if(result.value) {
-                // filtrar los empleados excluyendo al empleado que coincide con el id
-                const [employee] = employees.filter(employee => employee.id === id)
-                Swal.fire({
-                  icon: 'success',
-                  title: 'Deleted!',
-                  text: `${employee.firstName} ${employee.lastName} is data has been deleted.`,
-                  showConfirmButton: false,
-                  timer: 1200,
-                });
-
-                const employeesCopy = employees.filter(employee => employee.id !== id);
-                localStorage.setItem('employees_data', JSON.stringify(employeesCopy));
-                setEmployees(employeesCopy);
+        }).then(result => {
+            if (result.value) {
+                //busca el id que coincida con el empleado si no lo encuentra dara valor -1
+                const indexToDelete = employees.findIndex(employee => employee.id === id);
+                //si es diferente a -1 hara la eliminacion
+                if (indexToDelete !== -1) {
+                    //obtiene los datos del empleado seleccionado
+                    const deletedEmployee = employees[indexToDelete];
+                    // filtra y elimina al empleado de la lista
+                    const filteredEmployees = employees.filter(employee => employee.id !== id);
+    
+                    // actualizar el id de los empleados que estan despues de eliminar un empleado
+                    for (let i = indexToDelete; i < filteredEmployees.length; i++) {
+                        filteredEmployees[i].id = i + 1;
+                    }
+    
+                    // actualiza el estado de los empleados y los datos en el almacenamiento local
+                    setEmployees(filteredEmployees);
+                    localStorage.setItem('employees_data', JSON.stringify(filteredEmployees));
+    
+                    // mensaje de exito
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: `${deletedEmployee.firstName} ${deletedEmployee.lastName} data has been deleted.`,
+                        showConfirmButton: false,
+                        timer: 1200,
+                    });
+                }
             }
-        })
-
+        });
     }
+    
+
+        //Paginacion
+    const itemsPerPage = 10;//cantidad de items a mostrar
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(employees.length / itemsPerPage);//calcula de total de paginas que va haber
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItems = employees.slice(startIndex, endIndex);//cantidad de empleados a mostras que son 10
+        // console.log(currentItems)
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(Math.max(1, Math.min(newPage, totalPages)));
+    };
 
     return(
         <div className="dasboard-content">
-            <h1 className="titlo">Employers table</h1>
-            <Header setIsAuthenticated={setIsAuthenticated} setIsAdding={setIsAdding}/>
-            <Table employees={employees} handleEdit={handleEdit}  handleDelete={handleDelete}/>
+            <h1 className="titulo">Employers table</h1>
+
+            <section className="table-employee">
+                <Header setIsAuthenticated={setIsAuthenticated} setIsAdding={setIsAdding}/>
+                <Table employees={currentItems} handleEdit={handleEdit}  handleDelete={handleDelete} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange}/>
+            </section>
 
             {isAdding && (
                 <Created

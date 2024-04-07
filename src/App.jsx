@@ -25,5 +25,16 @@ function App() {
     </>
   )
 }
-
 export default App
+
+// import PaginationExample from "./test/paginatio";
+// function App() {
+
+//   return (
+//     <>
+//       <PaginationExample></PaginationExample>
+//     </>
+//   )
+// }
+
+// export default App

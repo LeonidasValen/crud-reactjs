@@ -2,72 +2,68 @@
     margin-top: 2rem;
 }
 
-.contain-table{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0 1rem;
+.titulo{
+    margin: 0 2rem;
+}
+
+.table-employee{
+    margin: 2rem;
+    border: 1px solid #c9c9c9;
+    box-shadow: rgba(145, 158, 171, 0.08) 0px 0px 2px 0px, rgba(145, 158, 171, 0.08) 0px 12px 24px -4px;
+    border-radius: 10px;
 }
 
 .header-content{
-    margin: 1rem;
-    padding: 0 1rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px 10px  0 0 ;
 }
-.btn-logout{
+
+.header-content button{
     font-size: 1em;
-    color: black;
     padding: 8px 10px;
-    background: #fff;
-    border: 1px solid #c9c9c9;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.contain-table table tbody tr:nth-child(odd) {
-    background-color: #d2d2d2;
-}
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    width: 100%;
-    max-width: 100%;
-}
-  
-thead th {
-    border-bottom: 2px solid #444444;
-}
-  
-td {
-    border-bottom: 1px solid #000000;
-}
-  
-th,td {
-    text-align: left;
-    padding: 0.5rem;
-}
-.actions{
-    text-align: center;
-}
-.action-trash{
-    text-align: right;
-}
-.action-edit{
-    text-align: left;
+.btn-logout{
+    color: black;
+    background: #fff;
+    border: 1px solid #c9c9c9;
 }
 
-.action-trash button, .action-edit button{
-    padding: 4px;
-    border-radius: 50%;
-    border: 2px solid #141414;
+.btn-addemployee{
+    color: white;
+    margin-right: 10px;
+    background: #0366ee;
+    border: 1px solid #0366ee;
+}
+
+.pagination-container{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius:  0 0 10px 10px ;
+}
+.pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-pagination button{
+    background: 0;
+    border: 0;
     cursor: pointer;
-    color: #fff;
-}
-
-.action-trash button{
-    background: red;
-}
-.action-edit button{
-    background: #1175d9;
+    padding: 2px;
+    margin: 0 8px;
 }
 
 /*EDIT*/
@@ -88,6 +84,7 @@ th,td {
     background: #33333371;
     width: 100%;
     height: 100%;
+    transition: background-color .2s;
 }
 
 .modal-container{
@@ -96,6 +93,7 @@ th,td {
     margin: auto;
     top: 2rem;
     max-width: 600px;
+    animation: swal2-show .3s;
 }
 
 .modal-container h1{

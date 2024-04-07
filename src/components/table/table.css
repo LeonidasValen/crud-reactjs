@@ -1,0 +1,63 @@
+.contain-table{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contain-table table tbody tr:nth-child(odd) {
+    background-color: #dcdcdc;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    max-width: 100%;
+}
+  
+thead th {
+    border-bottom: 1px solid #c9c9c9;
+    border-top: 1px solid #c9c9c9;
+    padding: 0.5rem;
+    padding-right: 0.7rem;
+    background-color: #fff;
+}
+thead th svg{
+    float: right;
+    color: #525252;
+}
+  
+td {
+    border-bottom: 1px solid #c9c9c9;
+}
+tr{
+    background: #fff;
+}
+
+th,td {
+    text-align: left;
+    padding: 0.5rem;
+}
+.actions{
+    text-align: center;
+}
+.action-trash{
+    text-align: right;
+}
+.action-edit{
+    text-align: left;
+}
+
+.action-trash button, .action-edit button{
+    padding: 4px;
+    border-radius: 50%;
+    border: 2px solid #141414;
+    cursor: pointer;
+    color: #fff;
+}
+
+.action-trash button{
+    background: red;
+}
+.action-edit button{
+    background: #1175d9;
+}
